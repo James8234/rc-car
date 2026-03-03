@@ -1,7 +1,7 @@
 from fusion_hat.servo import Servo
 from time import sleep
 from menu import draw_menu
-from get_input import get_user_input
+from handle_input import get_user_input, clamp_servo_angle
 from render_ui import render_screen
 import curses
 
@@ -16,8 +16,9 @@ def main(stdscr):
 	stdscr.keypad(True) #Provides curses to process special characters
 	stdscr.nodelay(True) # getch and getkey become non-blocking
 
-	servo = Servo(0) #server pin 0
-	i = 0 #angle of servo
+	servo = Servo(0) #initialized with PWM 0
+	servo_offset = 10 #servo needs to be centered
+	i = 0  #angle of servo
 	key = 'a' #sets a variable so key is defined outside of the function
 
 	#get initial_screen_size
@@ -30,23 +31,19 @@ def main(stdscr):
 		draw_menu(stdscr, initial_screen_size) #updates the screen if changes are made
 		key = '' #assign a variable so key dose not stay on a or d
 
-		key = get_user_input(stdscr)
+		key = get_user_input(stdscr) #the function gets an integer ACII and converts it into char
 
 		if key == 'A' or key == 'a':
-			if i <= 81:
-				i = i + 10
-				servo.angle(i)
-
+			i = i + 10
 		if key == 'D' or key == 'd':
-			if i >= -81:
-            	#Sweep back
-				i = i - 10
-				servo.angle(i)
+			i = i - 10
+
+		#Clamp input
+		i = clamp_servo_angle(i)
+
+		servo.angle(i + servo_offset)
 
 #	stdscr.refresh() # updates screen after chages where made
 #	stdscr.getkey() 
 
 curses.wrapper(main)
-
-
-
