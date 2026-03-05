@@ -1,5 +1,5 @@
 from fusion_hat.servo import Servo
-from handle_input import get_user_input, clamp_servo_angle
+from handle_input import  clamp_servo_angle
 
 class MyServo:
 	def __init__(self, pin, angle):

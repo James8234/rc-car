@@ -1,22 +1,20 @@
 from time import sleep
 from fusion_hat.motor import Motor
 
-def motor_control(key):
-	#create object for motor port M2
-	#is_reverse=True means the motor direction is inverted
-	motor = Motor('M2', is_reversed=False)
+class MyMotor:
+	def __init__(self, motor_port):
+		self.motor = Motor(motor_port, is_reversed=False)
 
+	def motor_control(self, key):
 
-#	if key == 'W' or key == 'w':
-	motor.power(75)
-#		sleep(1)
+		match key:
+			case 'w':
+				self.motor.power(75)
+			case 's':
+				self.motor.power(-50)
+			case 'e':
+				self.motor.stop()
+			case 'q':
+				self.motor.stop()
+				sleep(0.1)
 
-	if key == 'S' or key == 's':
-		motor.power(-50)
-#		sleep(1)
-
-	motor.power(0)
-
-	if key == 'D' or key == 'd':
-		motor.stop() #Ensure motor stopped on exit
-		sleep(.1) #short exit delay for safety
