@@ -2,17 +2,19 @@ from fusion_hat.servo import Servo
 from handle_input import  clamp_servo_angle
 
 class MyServo:
-	def __init__(self, pin, angle):
+	def __init__(self, pin:float, angle:float,left_button:str,right_button:str):
 		self.pin = pin
 		self.angle = angle
 		self.servo = Servo(pin)
+		self.left_button = left_button.lower
+		self.right_button = right_button.lower
 
 	def drive_servo(self, key):
 		servo_offset = 0 #servo needs to be centered
 		servo_angle_change = 5
-		if key == 'A' or key == 'a':
+		if key == self.left_button:
 			self.angle += servo_angle_change
-		if key == 'D' or key == 'd':
+		if key == self.right_button:
 			self.angle -= servo_angle_change
 
 		#Clamp input
