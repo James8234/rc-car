@@ -20,7 +20,7 @@ def main(stdscr):
 	stdscr.nodelay(True) # getch and getkey become non-blocking
 
 	servo_steering = MyServo(0, 0,'a','d') #initialized steering servo with PWM 0 and angle 0
-	servo_lidat = MyServo(1,0,'f','h') # initialized lidat servo with PWM 0 and angle 0
+	servo_lidar = MyServo(1,0,'f','h') # initialized lidat servo with PWM 0 and angle 0
 #	servo1 = MyServo(1, 0)
 	backLeft_motor = MyMotor('M1', 25) #initialize with motor port M2
 	backRight_motor = MyMotor('M2', 25)
@@ -43,7 +43,8 @@ def main(stdscr):
 		backLeft_motor.motor_control(key) #Update motor PWM power
 		backRight_motor.motor_control(key)
 
-		servo.drive_servo(key) #updates servo angle
+		servo_steering.drive_servo(key) #updates servo angle
+		servo_lidar.drive_servo(key)
 #		servo1.drive_servo(key)
 
 curses.wrapper(main)

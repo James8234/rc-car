@@ -6,12 +6,13 @@ class MyServo:
 		self.pin = pin
 		self.angle = angle
 		self.servo = Servo(pin)
-		self.left_button = left_button.lower
-		self.right_button = right_button.lower
+		self.left_button = left_button.lower()
+		self.right_button = right_button.lower()
 
 	def drive_servo(self, key):
 		servo_offset = 0 #servo needs to be centered
 		servo_angle_change = 5
+
 		if key == self.left_button:
 			self.angle += servo_angle_change
 		if key == self.right_button:
