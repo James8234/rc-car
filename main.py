@@ -19,7 +19,8 @@ def main(stdscr):
 	stdscr.keypad(True) #Provides curses to process special characters
 	stdscr.nodelay(True) # getch and getkey become non-blocking
 
-	servo = MyServo(0, 0) #initialized with PWM 0 and angle 0
+	servo_steering = MyServo(0, 0) #initialized steering servo with PWM 0 and angle 0
+	servo_lidat = MyServo(0,0) # initialized lidat servo with PWM 0 and angle 0
 #	servo1 = MyServo(1, 0)
 	backLeft_motor = MyMotor('M1', 25) #initialize with motor port M2
 	backRight_motor = MyMotor('M2', 25)
@@ -34,7 +35,7 @@ def main(stdscr):
 #	motor_control(key)
 
 	while key != 'q':
-		draw_menu(stdscr, initial_screen_state, servo.output_angle()) #updates the screen if changes are made
+		draw_menu(stdscr, initial_screen_state, servo_steering.output_angle()) #updates the screen if changes are made
 		key = '' #assign a variable so key dose not stay on a or d
 
 		key = get_user_input(stdscr) #the function gets an integer ACII and converts it into char
