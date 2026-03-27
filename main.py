@@ -5,7 +5,7 @@ from handle_input import get_user_input
 from drive_motor_control import MyMotor
 from render_ui import render_screen
 import curses
-from servo_motor_control import MyServo
+from servo_motor_control import MyServo, lidar_servo
 #import asyncio
 
 #Sweep from -90 to +90 degreess in steps of 10 degrees
@@ -19,8 +19,8 @@ def main(stdscr):
 	stdscr.keypad(True) #Provides curses to process special characters
 	stdscr.nodelay(True) # getch and getkey become non-blocking
 
-	servo_steering = MyServo(0, 0,'a','d') #initialized steering servo with PWM 0 and angle 0
-	servo_lidar = MyServo(1,0,'f','h') # initialized lidat servo with PWM 0 and angle 0
+	servo_steering = MyServo(0, 0) #initialized steering servo with PWM 0 and angle 0
+	servo_lidar = lidar_servo(1, 0) # initialized lidat servo with PWM 0 and angle 0
 #	servo1 = MyServo(1, 0)
 	backLeft_motor = MyMotor('M1', 25) #initialize with motor port M2
 	backRight_motor = MyMotor('M2', 25)
