@@ -8,12 +8,12 @@ class MyServo:
 		self.servo = Servo(pin)
 
 	def drive_servo(self, key):
-		servo_offset = 10 #servo needs to be centered
-
+		servo_offset = 0 #servo needs to be centered
+		servo_angle_change = 5
 		if key == 'A' or key == 'a':
-			self.angle += 10
+			self.angle += servo_angle_change
 		if key == 'D' or key == 'd':
-			self.angle -= 10
+			self.angle -= servo_angle_change
 
 		#Clamp input
 		self.angle = clamp_servo_angle(self.angle)
