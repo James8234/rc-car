@@ -20,3 +20,19 @@ class MyServo:
 
 		#update poition of servo
 		self.servo.angle(self.angle + servo_offset)
+
+	def output_angle(self):
+		return self.angle
+
+#h	def pan_lidar_servo(self):
+
+# The idea is that you want the lidar to pan -90 and 90. This means you need to keep addding untill you reach 90 
+# or subtract untill you reach -90.
+
+#		self.angle += 10
+
+#		self.angle -= 10
+
+#		self.angle = clamp_servo_angle(self.angle)
+#		self.servo.angle(self.angle)
+#		self.servo.angle(self.angle)

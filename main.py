@@ -6,7 +6,7 @@ from drive_motor_control import MyMotor
 from render_ui import render_screen
 import curses
 from servo_motor_control import MyServo
-import asyncio
+#import asyncio
 
 #Sweep from -90 to +90 degreess in steps of 10 degrees
 
@@ -20,25 +20,29 @@ def main(stdscr):
 	stdscr.nodelay(True) # getch and getkey become non-blocking
 
 	servo = MyServo(0, 0) #initialized with PWM 0 and angle 0
-	motor = MyMotor('M2') #initialize with motor port M2
+#	servo1 = MyServo(1, 0)
+	backLeft_motor = MyMotor('M1', 25) #initialize with motor port M2
+	backRight_motor = MyMotor('M2', 25)
 	key = 'w' #sets a variable so key is defined outside of the function
 
 	#get initial_screen_size
 	height, width = stdscr.getmaxyx()
-	initial_screen_size = [height + width]
+	initial_screen_state = [height + width, 0]
 
-	render_screen(stdscr) #creates the menu to provide info on how to use the program
+	render_screen(stdscr, 10) #creates the menu to provide info on how to use the program
 
 #	motor_control(key)
 
 	while key != 'q':
-		draw_menu(stdscr, initial_screen_size) #updates the screen if changes are made
+		draw_menu(stdscr, initial_screen_state, servo.output_angle()) #updates the screen if changes are made
 		key = '' #assign a variable so key dose not stay on a or d
 
 		key = get_user_input(stdscr) #the function gets an integer ACII and converts it into char
 
-		motor.motor_control(key) #Update motor PWM power
+		backLeft_motor.motor_control(key) #Update motor PWM power
+		backRight_motor.motor_control(key)
 
 		servo.drive_servo(key) #updates servo angle
+#		servo1.drive_servo(key)
 
 curses.wrapper(main)
