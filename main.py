@@ -21,18 +21,15 @@ def main(stdscr):
 
 	servo_steering = MyServo(0, 0) #initialized steering servo with PWM 0 and angle 0
 	servo_lidar = lidar_servo(1, 0) # initialized lidat servo with PWM 0 and angle 0
-#	servo1 = MyServo(1, 0)
 	backLeft_motor = MyMotor('M1', 25) #initialize with motor port M2
 	backRight_motor = MyMotor('M2', 25)
 	key = 'w' #sets a variable so key is defined outside of the function
 
 	#get initial_screen_size
 	height, width = stdscr.getmaxyx()
-	initial_screen_state = [height + width, 0]
+	initial_screen_state = [height + width, 0, 0]
 
 	render_screen(stdscr, 10, 10) #creates the menu to provide info on how to use the program
-
-#	motor_control(key)
 
 	while key != 'q':
 		if checkForChanges(stdscr, initial_screen_state, servo_steering.get_angle(), backLeft_motor.get_speed()): #updates the screen if changes are made
@@ -47,6 +44,5 @@ def main(stdscr):
 
 		servo_steering.drive_servo(key) #updates servo angle
 		servo_lidar.drive_servo(key)
-#		servo1.drive_servo(key)
 
 curses.wrapper(main)

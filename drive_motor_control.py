@@ -28,7 +28,7 @@ class MyMotor:
 			case 's':
 				self.motor.power(-self.speed)
 			case 'e':
-#				self.speed = 0
+				self.speed = 0
 				self.motor.stop()
 			case 'q':
 				self.motor.stop()

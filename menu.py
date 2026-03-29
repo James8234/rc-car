@@ -13,10 +13,13 @@ def checkForChanges(stdscr, previous_screen_state, servo_angle, motor_speed):
 
 	if (height + width) != previous_screen_state[0]:
 		state = True
-
-		render_screen(stdscr, servo_angle, motor_speed)
+	elif servo_angle != previous_screen_state[1]:
+		state = True
+	elif motor_speed != previous_screen_state[2]:
+		state = True
 
 	previous_screen_state[0] = height + width
 	previous_screen_state[1] = servo_angle
+	previous_screen_state[2] = motor_speed
 
 	return state

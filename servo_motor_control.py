@@ -12,30 +12,27 @@ class MyServo:
 		servo_angle_change = 5
 
 		if key == 'a':
-			self.angle += servo_angle_change
+			self.increment_angle(servo_angle_change)
 		if key == 'd':
-			self.angle -= servo_angle_change
-
-		#Clamp input
-		self.angle = clamp_servo_angle(self.angle)
-
-		#update poition of servo
-		self.servo.angle(self.angle + servo_offset)
+			self.increment_angle(-servo_angle_change)
 
 	def get_angle(self):
 		return self.angle
 
 	def set_angle(self, angle):
-		self.angle = self.clamp_servo_angle(angle)
+		clamped_angle = self.clamp_angle(angle)
+		self.servo.angle(self.clamp_servo_angle(angle))
 
 	def increment_angle(self, angle):
-		self.angle = self.clamp_servo_angle(self.get_angle() + angle)
+		clamped_angle = self.clamp_servo_angle(self.get_angle() + angle)
+		self.angle = clamped_angle
+		self.servo.angle(clamped_angle)
 
 	def clamp_servo_angle(self, angle):
-		if(angle > 90):
-			return 90
-		elif(angle < -90):
-			return -90
+		if(angle > 30):
+			return 30
+		elif(angle < -40):
+			return -40
 		else:
 			return angle
 
