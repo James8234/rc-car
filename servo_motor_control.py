@@ -6,8 +6,6 @@ class MyServo:
 		self.pin = pin
 		self.angle = angle
 		self.servo = Servo(pin)
-#		self.left_button = left_button.lower()
-#		self.right_button = right_button.lower()
 
 	def drive_servo(self, key):
 		servo_offset = 0 #servo needs to be centered
@@ -24,8 +22,22 @@ class MyServo:
 		#update poition of servo
 		self.servo.angle(self.angle + servo_offset)
 
-	def output_angle(self):
+	def get_angle(self):
 		return self.angle
+
+	def set_angle(self, angle):
+		self.angle = self.clamp_servo_angle(angle)
+
+	def increment_angle(self, angle):
+		self.angle = self.clamp_servo_angle(self.get_angle() + angle)
+
+	def clamp_servo_angle(self, angle):
+		if(angle > 90):
+			return 90
+		elif(angle < -90):
+			return -90
+		else:
+			return angle
 
 class lidar_servo(MyServo):
 	def __init__(self, pin: float, angle: float):
@@ -36,26 +48,6 @@ class lidar_servo(MyServo):
 		servo_angle_change = 5
 
 		if key == 'f':
-			self.angle += servo_angle_change
+			self.increment_angle(servo_angle_change)
 		if key == 'h':
-			self.angle -= servo_angle_change
-
-		#Clamp input
-		self.angle = clamp_servo_angle(self.angle)
-
-		#update poition of servo
-		self.servo.angle(self.angle + servo_offset)
-
-
-#h	def pan_lidar_servo(self):
-
-# The idea is that you want the lidar to pan -90 and 90. This means you need to keep addding untill you reach 90 
-# or subtract untill you reach -90.
-
-#		self.angle += 10
-
-#		self.angle -= 10
-
-#		self.angle = clamp_servo_angle(self.angle)
-#		self.servo.angle(self.angle)
-#		self.servo.angle(self.angle)
+			self.increment_angle(-servo_angle_change)

@@ -3,7 +3,7 @@ import curses
 #from servo_motor_control import MyServo
 
 
-def render_screen(stdscr, servo_angle):
+def render_screen(stdscr, servo_angle, motor_speed):
 
 	#get terminal screen size
 	height, width = stdscr.getmaxyx()
@@ -31,7 +31,7 @@ def render_screen(stdscr, servo_angle):
 	stdscr.addstr(4, center_SC, servoControls)
 	stdscr.addstr(5, center_PC, speedControls)
 	stdscr.addstr(6, center_Q, quit)
-	stdscr.addstr(7, center, Tangle)
+#	stdscr.addstr(7, center, Tangle)
 
 	#update the screen
 	stdscr.refresh()

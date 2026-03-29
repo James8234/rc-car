@@ -1,6 +1,6 @@
 from fusion_hat.servo import Servo
 from time import sleep
-from menu import draw_menu
+from menu import checkForChanges
 from handle_input import get_user_input
 from drive_motor_control import MyMotor
 from render_ui import render_screen
@@ -30,12 +30,14 @@ def main(stdscr):
 	height, width = stdscr.getmaxyx()
 	initial_screen_state = [height + width, 0]
 
-	render_screen(stdscr, 10) #creates the menu to provide info on how to use the program
+	render_screen(stdscr, 10, 10) #creates the menu to provide info on how to use the program
 
 #	motor_control(key)
 
 	while key != 'q':
-		draw_menu(stdscr, initial_screen_state, servo_steering.output_angle()) #updates the screen if changes are made
+		if checkForChanges(stdscr, initial_screen_state, servo_steering.get_angle(), backLeft_motor.get_speed()): #updates the screen if changes are made
+			render_screen(stdscr, servo_steering.get_angle(), backLeft_motor.get_speed())
+
 		key = '' #assign a variable so key dose not stay on a or d
 
 		key = get_user_input(stdscr) #the function gets an integer ACII and converts it into char
