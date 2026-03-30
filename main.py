@@ -1,12 +1,12 @@
 from fusion_hat.servo import Servo
 from time import sleep
-from menu import checkForChanges
+from update_UI import checkForChanges, screen_state
 from handle_input import get_user_input
 from drive_motor_control import MyMotor
 from render_ui import render_screen
 import curses
 from servo_motor_control import MyServo, lidar_servo
-#import asyncio
+
 
 #Sweep from -90 to +90 degreess in steps of 10 degrees
 
@@ -21,15 +21,16 @@ def main(stdscr):
 
 	servo_steering = MyServo(0, 0) #initialized steering servo with PWM 0 and angle 0
 	servo_lidar = lidar_servo(1, 0) # initialized lidat servo with PWM 0 and angle 0
-	backLeft_motor = MyMotor('M1', 25) #initialize with motor port M2
-	backRight_motor = MyMotor('M2', 25)
+	backLeft_motor = MyMotor('M1', 0) #initialize with motor port M2
+	backRight_motor = MyMotor('M2', 0)
 	key = 'w' #sets a variable so key is defined outside of the function
 
 	#get initial_screen_size
 	height, width = stdscr.getmaxyx()
-	initial_screen_state = [height + width, 0, 0]
+	initial_screen_state = screen_state(height + width, 0, 0)
 
-	render_screen(stdscr, 10, 10) #creates the menu to provide info on how to use the program
+
+	render_screen(stdscr, 0, 0) #creates the menu to provide info on how to use the program
 
 	while key != 'q':
 		if checkForChanges(stdscr, initial_screen_state, servo_steering.get_angle(), backLeft_motor.get_speed()): #updates the screen if changes are made

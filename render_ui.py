@@ -1,7 +1,4 @@
 import curses
-#from fusion_hat.servo import Servo
-#from servo_motor_control import MyServo
-
 
 def render_screen(stdscr, servo_angle, motor_speed):
 
@@ -17,7 +14,7 @@ def render_screen(stdscr, servo_angle, motor_speed):
 	lidar_servo_controls = "Lidar Servo Control: <- F | H ->"[:width-1]
 	speedControls = "1 - slow | 2 - regular | 3 - fast | 4 - crazy fast"[:width-1]
 	steering_angle = f"Your steering angle is: {servo_angle}"[:width-1]
-	wheel_speed = f"Your speed is: {motor_speed}"[:width-1]
+	wheel_speed = f"Your motor power is: {motor_speed}"[:width-1]
 	quit = "Enter q to quit program"[:width-1]
 	Tangle = f"Your angle is {servo_angle}"
 

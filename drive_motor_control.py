@@ -24,6 +24,8 @@ class MyMotor:
 
 		match key:
 			case 'w':
+				if self.speed == 0: #lets say your stopped at hit gas w, the car should move
+					self.speed = 25
 				self.motor.power(self.speed)
 			case 's':
 				self.motor.power(-self.speed)
