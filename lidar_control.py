@@ -15,12 +15,12 @@ def read_tfluna_data():
 				strength = bytes_serial[4] + bytes_serial[5]*256 # signal strength in next two bytes
 				return distance, strength
 
+#def run_lidar():
 try:
 	if ser.isOpen() == False:
 		ser.open() # open serial port if not open
 
 	while True:
-
 		distance, strength = read_tfluna_data()
 
 		print("Distance", format(distance), "cm")
@@ -28,3 +28,20 @@ try:
 except KeyboardInterrupt:
 	print("Program ended.")
 	ser.close() # close serial port
+
+
+#def run_lidar():
+#	try:
+#		if ser.isOpen() == False:
+#			ser.open() # open serial port if not open
+
+#		while True:
+
+#			distance, strength = read_tfluna_data()
+
+#			print("Distance", format(distance), "cm")
+#			time.sleep(.5)
+#	except KeyboardInterrupt:
+#		print("Program ended.")
+#		ser.close() # close serial port
+
