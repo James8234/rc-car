@@ -6,6 +6,7 @@ from drive_motor_control import MyMotor
 from render_ui import render_screen
 import curses
 from servo_motor_control import MyServo
+from auto_drive import auto_drive_mode
 
 
 #Sweep from -90 to +90 degreess in steps of 10 degrees
@@ -21,8 +22,8 @@ def main(stdscr):
 
 	servo_steering = MyServo(0, 0, "d", "a", 30, -30) #initialized MyServo(PWMpin, angle, rightkey, leftkey, rightAngleLimit, leftAngleLimit)
 	servo_lidar = MyServo(1, 0, "h", "f", 90, -90)
-	backLeft_motor = MyMotor('M1', 0) #initialize with motor port M2
-	backRight_motor = MyMotor('M2', 0)
+	backLeft_motor = MyMotor('M2', 0, 1) #initialize with motor port M2
+	backRight_motor = MyMotor('M1', 0, 0.62)
 	key = 'w' #sets a variable so key is defined outside of the function
 
 	#get initial_screen_size
@@ -39,6 +40,9 @@ def main(stdscr):
 		key = '' #assign a variable so key dose not stay on a or d
 
 		key = get_user_input(stdscr) #the function gets an integer ACII and converts it into char
+
+		if key == 'z':
+			auto_drive_mode(backLeft_motor, backRight_motor, servo_steering, servo_lidar)
 
 		backLeft_motor.motor_control(key) #Update motor PWM power
 		backRight_motor.motor_control(key)

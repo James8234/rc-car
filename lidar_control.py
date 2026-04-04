@@ -1,9 +1,10 @@
 import serial, time
+from drive_motor_control import MyMotor
 
 # Access the serial port for serial0 at a baud rate of 115200
-ser = serial.Serial("/dev/serial0", 115200, timeout=0) # mini UART serial device
+#ser = serial.Serial("/dev/serial0", 115200, timeout=0) # mini UART serial device
 
-def read_tfluna_data():
+def read_tfluna_data(ser):
 	while True:
 		counter = ser.in_waiting # count the number of bytes of the serial port
 		if counter > 8:
@@ -16,32 +17,42 @@ def read_tfluna_data():
 				return distance, strength
 
 #def run_lidar():
-try:
-	if ser.isOpen() == False:
-		ser.open() # open serial port if not open
+#try:
+#	if ser.isOpen() == False:
+#		ser.open() # open serial port if not open
 
-	while True:
-		distance, strength = read_tfluna_data()
+#	while True:
+#		distance, strength = read_tfluna_data()
 
-		print("Distance", format(distance), "cm")
-		time.sleep(.5)
-except KeyboardInterrupt:
-	print("Program ended.")
-	ser.close() # close serial port
+#		print("Distance", format(distance), "cm")
+#		time.sleep(.5)
+#except KeyboardInterrupt:
+#	print("Program ended.")
+#	ser.close() # close serial port
 
 
-#def run_lidar():
-#	try:
-#		if ser.isOpen() == False:
-#			ser.open() # open serial port if not open
+def run_lidar(ser):
+	backLeft_motor = MyMotor('M2', 0, 1) #initialize with motor port M2
+	backRight_motor = MyMotor('M1', 0, 0.62)
 
-#		while True:
+	try:
+		if ser.isOpen() == False:
+			ser.open() # open serial port if not open
 
-#			distance, strength = read_tfluna_data()
+		backLeft_motor.quick_start()
+		backRight_motor.quick_start()
 
-#			print("Distance", format(distance), "cm")
+		while True:
+
+			distance, strength = read_tfluna_data(ser)
+
+			print("Distance", format(distance), "cm")
 #			time.sleep(.5)
-#	except KeyboardInterrupt:
-#		print("Program ended.")
-#		ser.close() # close serial port
+
+			backLeft_motor.stop_if_close(distance)
+			backRight_motor.stop_if_close(distance)
+
+	except KeyboardInterrupt:
+		print("Program ended.")
+		ser.close() # close serial port
 
