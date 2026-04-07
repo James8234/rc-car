@@ -1,4 +1,5 @@
-from lidar_control import read_tfluna_data, run_lidar
+from lidar_control import read_tfluna_data, run_lidar, scan_lidar
+from servo_motor_control import MyServo
 import serial, time
 
 #print("Program ended.")
@@ -13,10 +14,12 @@ import serial, time
 #ser = serial.Serial("/dev/serial0", 115200, timeout=0)
 
 def main():
+	servo_lidar = MyServo(1, 90, "h", "f", 90, -90)
 	ser = serial.Serial("/dev/serial0", 115200, timeout=0)
-	read_tfluna_data(ser)
+	scan_lidar(ser, servo_lidar)
+#	read_tfluna_data(ser)
 #	lidar = lidar_module(ser)
-	run_lidar(ser)
+#	run_lidar(ser)
 	print("Program ended.")
 #	read_tfluna_data()
 

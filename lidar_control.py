@@ -1,5 +1,7 @@
 import serial, time
 from drive_motor_control import MyMotor
+from time import sleep
+#from servo_motor_control import MyServo
 
 # Access the serial port for serial0 at a baud rate of 115200
 #ser = serial.Serial("/dev/serial0", 115200, timeout=0) # mini UART serial device
@@ -16,24 +18,39 @@ def read_tfluna_data(ser):
 				strength = bytes_serial[4] + bytes_serial[5]*256 # signal strength in next two bytes
 				return distance, strength
 
-#def run_lidar():
-#try:
-#	if ser.isOpen() == False:
-#		ser.open() # open serial port if not open
 
-#	while True:
-#		distance, strength = read_tfluna_data()
+import numpy as np
+def scan_lidar(ser, servo_lidar):
+	angle = 5
+	elements = 37
+	i = 0
+	distanceArr = np.empty(elements)
+	angleArr = np.empty(elements)
 
-#		print("Distance", format(distance), "cm")
-#		time.sleep(.5)
-#except KeyboardInterrupt:
-#	print("Program ended.")
-#	ser.close() # close serial port
+	while i < elements:
+		distance, strength = read_tfluna_data(ser)
+		angleArr[i] = servo_lidar.get_angle()
+		distanceArr[i] = distance
 
+		if servo_lidar.get_angle() == 90:
+			angle = -5
+		if servo_lidar.get_angle() <= -90:
+			angle = 5
+		time.sleep(0.02)
+
+		servo_lidar.increment_angle(angle)
+
+		print(f"Your angle is {servo_lidar.get_angle()}")
+		i += 1
+	print(angleArr)
+	print(distanceArr)
+
+	servo_lidar.set_angle(90)
+	time.sleep(0.25)
 
 def run_lidar(ser):
-	backLeft_motor = MyMotor('M2', 0, 1) #initialize with motor port M2
-	backRight_motor = MyMotor('M1', 0, 0.62)
+	backLeft_motor = MyMotor('M2', 25, 1) #initialize with motor port M2
+	backRight_motor = MyMotor('M1', 25, 0.62)
 
 	try:
 		if ser.isOpen() == False:

@@ -26,7 +26,7 @@ class MyServo:
 		return self.angle
 
 	def set_angle(self, angle):
-		clamped_angle = self.clamp_angle(angle)
+		angle = self.clamp_servo_angle(angle)
 		self.servo.angle(self.clamp_servo_angle(angle))
 
 	def increment_angle(self, angle):
