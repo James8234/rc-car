@@ -1,27 +1,25 @@
 from lidar_control import read_tfluna_data, run_lidar, scan_lidar
 from servo_motor_control import MyServo
 import serial, time
+import numpy as np
 
-#print("Program ended.")
-
-#ser = serial.Serial("/dev/serial0", 115200, timeout=0)
-
-#class lidar_module:
-#	def __init__(self, ser):
-#		self.ser = ser
-#print("Program ended.")
-
-#ser = serial.Serial("/dev/serial0", 115200, timeout=0)
 
 def main():
 	servo_lidar = MyServo(1, 90, "h", "f", 90, -90)
-	ser = serial.Serial("/dev/serial0", 115200, timeout=0)
-	scan_lidar(ser, servo_lidar)
-#	read_tfluna_data(ser)
-#	lidar = lidar_module(ser)
-#	run_lidar(ser)
+	lidar = serial.Serial("/dev/serial0", 115200, timeout=0)
+
+	elements = 37
+	distanceArr = np.empty(elements)
+	angleArr = np.empty(elements)
+	full_scan = [90, -90]
+	small_scan = [45, -45]
+
+
+	scan_lidar(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
+
+	print(angleArr)
+	print(distanceArr)
 	print("Program ended.")
-#	read_tfluna_data()
 
 if __name__ == "__main__":
 	main()

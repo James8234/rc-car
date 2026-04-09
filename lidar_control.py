@@ -1,5 +1,6 @@
 import serial, time
 from drive_motor_control import MyMotor
+#from servo_motor_control import MyServo
 from time import sleep
 #from servo_motor_control import MyServo
 
@@ -19,32 +20,28 @@ def read_tfluna_data(ser):
 				return distance, strength
 
 
-import numpy as np
-def scan_lidar(ser, servo_lidar):
+#import numpy as np
+
+def scan_lidar(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 	angle = 5
-	elements = 37
 	i = 0
-	distanceArr = np.empty(elements)
-	angleArr = np.empty(elements)
 
 	while i < elements:
 		distance, strength = read_tfluna_data(ser)
 		angleArr[i] = servo_lidar.get_angle()
 		distanceArr[i] = distance
 
-		if servo_lidar.get_angle() == 90:
+		if servo_lidar.get_angle() == scan_angle[0]:
 			angle = -5
-		if servo_lidar.get_angle() <= -90:
+		if servo_lidar.get_angle() <= scan_angle[1]:
 			angle = 5
 		time.sleep(0.02)
 
 		servo_lidar.increment_angle(angle)
-
-		print(f"Your angle is {servo_lidar.get_angle()}")
+#		print(f"Your angle is {servo_lidar.get_angle()}")
 		i += 1
-	print(angleArr)
-	print(distanceArr)
 
+	#set back to starting angle.
 	servo_lidar.set_angle(90)
 	time.sleep(0.25)
 
