@@ -16,15 +16,19 @@ sensor data for environmental awareness, and switch between manual input control
 - **User Interface** — Dynamic on-screen rendering of telemetry, sensor data, and car status.
 - **Modular Design** — Clean separation of concerns across motor control, sensor handling, input, autonomy, and UI modules.
 
-## Project Structure
-rc-car/
-├── main.py                  # Main entry point — starts the control loop
-├── auto_drive.py            # Autonomous driving logic and decision making
-├── drive_motor_control.py   # Controls the main drive motors (throttle)
-├── servo_motor_control.py   # Controls the steering servo
-├── lidar_control.py         # Interface and data processing for the LiDAR sensor
-├── handle_input.py          # Keyboard / controller input handling
-├── render_ui.py             # Renders the user interface / dashboard
-├── update_UI.py             # Updates UI elements in real time
-├── test_lidar_main.py       # Standalone test script for LiDAR
-└── pycache/             # Python cache directory (ignored)
+
+
+## Getting Started## Requirements
+
+- Python 3.x
+- Hardware:
+  - RC car chassis with DC drive motors and steering servo
+  - LiDAR sensor (e.g. RPLIDAR or similar)
+  - Raspberry Pi, Arduino, or compatible single-board computer for control
+- Python libraries (depending on your hardware setup):
+  - `pyserial`, `RPi.GPIO`, `adafruit-circuitpython-servokit`, or similar for motor/LiDAR control
+  - `pygame`, `curses`, 
+
+1. Clone the repository:
+   git clone https://github.com/James8234/rc-car.git
+   python main.rs
