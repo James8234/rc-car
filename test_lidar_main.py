@@ -1,4 +1,4 @@
-from lidar_control import read_tfluna_data, run_lidar, scan_lidar
+from lidar_control import read_tfluna_data, run_lidar, lidar_sweep, checkFwdOpen
 from servo_motor_control import MyServo
 import serial, time
 import numpy as np
@@ -15,10 +15,16 @@ def main():
 	small_scan = [45, -45]
 
 
-	scan_lidar(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
+	lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
 
 	print(angleArr)
 	print(distanceArr)
+
+	if checkFwdOpen(distanceArr, angleArr, 30):
+		print("Front is open")
+	else:
+		print("Front is not open")
+
 	print("Program ended.")
 
 if __name__ == "__main__":

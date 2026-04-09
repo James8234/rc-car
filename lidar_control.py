@@ -2,6 +2,8 @@ import serial, time
 from drive_motor_control import MyMotor
 #from servo_motor_control import MyServo
 from time import sleep
+import numpy as np
+
 #from servo_motor_control import MyServo
 
 # Access the serial port for serial0 at a baud rate of 115200
@@ -19,10 +21,7 @@ def read_tfluna_data(ser):
 				strength = bytes_serial[4] + bytes_serial[5]*256 # signal strength in next two bytes
 				return distance, strength
 
-
-#import numpy as np
-
-def scan_lidar(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
+def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 	angle = 5
 	i = 0
 
@@ -38,12 +37,29 @@ def scan_lidar(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 		time.sleep(0.02)
 
 		servo_lidar.increment_angle(angle)
-#		print(f"Your angle is {servo_lidar.get_angle()}")
 		i += 1
 
 	#set back to starting angle.
 	servo_lidar.set_angle(90)
 	time.sleep(0.25)
+
+def checkFwdOpen(distanceArr, angleArr, angle):
+	start = np.nonzero(angleArr == angle)
+	end   = np.nonzero(angleArr == -angle)
+	start_index = start[0].item() #convert a single-element array into a scalar
+	end_index = end[0].item() + 1
+
+#	print(f"end_index: {end_index}")
+#	print(f"Start_index: {start_index}")
+
+	a = distanceArr[start_index:end_index] #store the range of values that belong to the angle
+	print(a)
+
+	for i in a:
+		if (i < 30):
+			return False
+	return True
+
 
 def run_lidar(ser):
 	backLeft_motor = MyMotor('M2', 25, 1) #initialize with motor port M2
@@ -69,4 +85,5 @@ def run_lidar(ser):
 	except KeyboardInterrupt:
 		print("Program ended.")
 		ser.close() # close serial port
+
 

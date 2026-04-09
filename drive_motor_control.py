@@ -51,3 +51,8 @@ class MyMotor:
 
 	def get_speed(self):
 		return self.speed
+
+	def set_power(self, power):
+		self.speed = 0
+		self.motor.stop()
+		sleep(0.1)
