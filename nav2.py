@@ -1,6 +1,7 @@
 import time
 import serial
-from fusion_hat import Motor, Servo
+from fusion_hat.motor import Motor
+from fusion_hat.servo import Servo
 
 class Navigation:
     def __init__(self, t_seconds=1.0, serial_port="/dev/serial0"):
