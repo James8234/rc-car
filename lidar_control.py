@@ -25,6 +25,9 @@ def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 	angle = 5
 	i = 0
 
+	servo_lidar.set_angle(90)
+	time.sleep(0.25)
+
 	while i < elements:
 		distance, strength = read_tfluna_data(ser)
 		angleArr[i] = servo_lidar.get_angle()
@@ -32,7 +35,7 @@ def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 
 		if servo_lidar.get_angle() == scan_angle[0]:
 			angle = -5
-		if servo_lidar.get_angle() <= scan_angle[1]:
+		if servo_lidar.get_angle() == scan_angle[1]:
 			angle = 5
 		time.sleep(0.02)
 
@@ -40,25 +43,64 @@ def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 		i += 1
 
 	#set back to starting angle.
-	servo_lidar.set_angle(90)
-	time.sleep(0.25)
 
-def checkFwdOpen(distanceArr, angleArr, angle):
-	start = np.nonzero(angleArr == angle)
-	end   = np.nonzero(angleArr == -angle)
-	start_index = start[0].item() #convert a single-element array into a scalar
-	end_index = end[0].item() + 1
+#	servo_lidar.set_angle(90)
+#	time.sleep(0.5)
 
-#	print(f"end_index: {end_index}")
-#	print(f"Start_index: {start_index}")
+def checkFwdOpen(distanceArr, angleArr, angles):
+	print(f"Your angles thing contain -0 {angles[0]} -1 {angles[1]}")
+	print(f"Your angleArr contains: {angleArr}")
+	start_index = np.nonzero(angleArr == angles[0])
+	end_index   = np.nonzero(angleArr == angles[1])
+	if start_index[0].size == 0 or end_index[0].size == 0:
+		return False
 
-	a = distanceArr[start_index:end_index] #store the range of values that belong to the angle
-	print(a)
+	start_index = start_index[0][0]
+	end_index = end_index[0][0]
+
+	if start_index > end_index:
+		start_index, end_index = end_index, start_index
+	#Check if arrays are empty
+#	if start[0].size == 0 or end[0].size == 0:
+#		return False
+	print(f"Your start_index is {start_index}")
+	print(f"Your end_index is {end_index}")
+
+	print("E")
+#	print(f"{start}")
+#	start_index = start[0] #.item() #convert a single-element array into a scalar
+#	end_index = end[0] + 1 #.item() + 1
+	print(f"The distance array contains {distanceArr}")
+	a = distanceArr[start_index:end_index + 1] #store the range of values that belong to the angle
+	print(f"The aray taken out is {a}")
+
+	if a.size == 0:
+		return False
 
 	for i in a:
 		if (i < 30):
 			return False
 	return True
+
+def change_direction(disArr, angArr):
+	Q1 = [90, 45]
+	Q2 = [40, 0]
+	Q3 = [-5, -45]
+	Q4 = [-50, -90]
+
+	if checkFwdOpen(disArr, angArr, Q2) and checkFwdOpen(disArr, angArr, Q3):
+		return 0
+	if checkFwdOpen(disArr, angArr, Q2):
+		return 90
+	if checkFwdOpen(disArr, angArr, Q3):
+		return -90
+	if checkFwdOpen(disArr, angArr, Q1):
+		return 90
+	if checkFwdOpen(disArr, angArr, Q4):
+		return -90
+	else:
+		#backup function
+		return 0
 
 
 def run_lidar(ser):
