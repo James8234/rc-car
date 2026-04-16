@@ -22,7 +22,7 @@ def read_tfluna_data(lidar):
 				return distance, strength
 
 
-def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
+def lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 	angle = 5
 	i = 0
 
@@ -30,7 +30,7 @@ def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 	time.sleep(0.25)
 
 	while i < elements:
-		distance, strength = read_tfluna_data(ser)
+		distance, strength = read_tfluna_data(lidar)
 		angleArr[i] = servo_lidar.get_angle()
 		distanceArr[i] = distance
 
@@ -38,15 +38,16 @@ def lidar_sweep(ser, servo_lidar, distanceArr, angleArr, elements, scan_angle):
 			angle = -5
 		if servo_lidar.get_angle() == scan_angle[1]:
 			angle = 5
-		time.sleep(0.04)
+		time.sleep(0.05)
 
+#		print("Increment called")
 		servo_lidar.increment_angle(angle)
 		i += 1
 
 	#set back to starting angle.
 
 #	servo_lidar.set_angle(90)
-#	time.sleep(0.5)
+	time.sleep(0.25)
 
 def checkFwdOpen(distanceArr, angleArr, angles):
 #	print(f"Your angles thing contain -0 {angles[0]} -1 {angles[1]}")
@@ -73,7 +74,9 @@ def checkFwdOpen(distanceArr, angleArr, angles):
 #	end_index = end[0] + 1 #.item() + 1
 #	print(f"The distance array contains {distanceArr}")
 	a = distanceArr[start_index:end_index + 1] #store the range of values that belong to the angle
-	print(f"The aray taken out is {a}")
+
+	print(f"Your angles are {angles[0]} and {angles[1]}, The section is: {a}")
+#	print(f"The aray taken out is {a}")
 
 	if a.size == 0:
 		return False
@@ -85,33 +88,37 @@ def checkFwdOpen(distanceArr, angleArr, angles):
 
 def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
 	Q1 = [90, 45]
-	Q2 = [40, 0]
-	Q3 = [-5, -45]
-	Q4 = [-50, -90]
+	Q2 = [40, -45]
+	Q3 = [-50, -90]
+
 	angle = 0
-	bools = [True, True, True, True]
+	bools = [True, True, True]
+	print("Q1 check -----------")
 	bools[0] = checkFwdOpen(disArr, angArr, Q1)
+	print("Q2 check -----------")
 	bools[1] = checkFwdOpen(disArr, angArr, Q2)
+	print("Q3 check -----------")
 	bools[2] = checkFwdOpen(disArr, angArr, Q3)
-	bools[3] = checkFwdOpen(disArr, angArr, Q4)
 
-	if bools[1] and bools[2]:
-									#	if checkFwdOpen(disArr, angArr, Q2) and checkFwdOpen(disArr, angArr, Q3):
-		backLeft_motor.set_power(25)
-		backRight_motor.set_power(25)
+	if bools[1]:
+#		backLeft_motor.set_power(25)
+#		backRight_motor.set_power(25)
 		angle =  0
-	elif  not bools[1] and not bools[2]:
-		backLeft_motor.set_power(0)
-		backRight_motor.set_power(0)
-	elif bools[1]:
-		angle = 90
-	elif bools[2]:
-		angle = -90
+#	elif  not bools[1] and not bools[2]:
+#		backLeft_motor.set_power(0)
+#		backRight_motor.set_power(0)
 	elif bools[0]:
-		angle = 90
+		angle = 45
+	elif bools[2]:
+		angle = -15
 
-	elif bools[3]:
-		angle = -90
+
+	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
+	print(f"Your angle is: {angle}")
+#	elif bools[0]:
+#		angle = 90
+#	elif bools[3]:
+#		angle = -90
 
 #	if checkFwdOpen(disArr, angArr, Q2):
 #		angle = 90

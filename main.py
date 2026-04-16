@@ -20,10 +20,10 @@ def main(stdscr):
 	stdscr.keypad(True) #Provides curses to process special characters
 	stdscr.nodelay(True) # getch and getkey become non-blocking
 
-	servo_steering = MyServo(0, 0, "d", "a", 30, -30) #initialized MyServo(PWMpin, angle, rightkey, leftkey, rightAngleLimit, leftAngleLimit)
-	servo_lidar = MyServo(1, 0, "h", "f", 90, -90)
+	servo_steering = MyServo(0, 0, "d", "a", 45, -15, 5) #initialized MyServo(PWMpin, angle, rightkey, leftkey, rightAngleLimit, leftAngleLimit)
+	servo_lidar = MyServo(1, 0, "h", "f", 90, -90, 5)
 	backLeft_motor = MyMotor('M2', 0, 1) #initialize with motor port M2
-	backRight_motor = MyMotor('M1', 0, 0.62)
+	backRight_motor = MyMotor('M1', 0, 1)
 	key = 'w' #sets a variable so key is defined outside of the function
 
 	#get initial_screen_size

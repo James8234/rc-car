@@ -10,6 +10,7 @@ class MyServo:
 			"Right": rightkey,
 			"Left": leftkey
 		}
+#		self.increments = increments
 		self.range = [rightAngleLimit, leftAngleLimit]
 
 
@@ -25,14 +26,20 @@ class MyServo:
 	def get_angle(self):
 		return self.angle
 
+	def get_incrementAngle(self):
+		return self.increments
+
 	def set_angle(self, angle):
 		angle = self.clamp_servo_angle(angle)
+		self.angle = angle
 		self.servo.angle(self.clamp_servo_angle(angle))
 
 	def increment_angle(self, angle):
-		clamped_angle = self.clamp_servo_angle(self.get_angle() + angle)
+		print(f"Your angle is {angle}")
+		clamped_angle = self.clamp_servo_angle(self.get_angle() + angle) #self.get_incrementAngle())
 		self.angle = clamped_angle
 		self.servo.angle(clamped_angle)
+		print(f"increment happened {clamped_angle}")
 
 	def clamp_servo_angle(self, angle):
 		if(angle > self.range[0]):
