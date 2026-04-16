@@ -6,22 +6,22 @@ import numpy as np
 
 
 def main():
-	servo_steering = MyServo(0, 0, "d", "a", 30, -30)
-	servo_lidar = MyServo(1, 90, "h", "f", 90, -90)
+	servo_steering = MyServo(0, 0, "d", "a", 30, -30, 20)
+	servo_lidar = MyServo(1, 90, "h", "f", 90, -90, 20)
 	lidar = serial.Serial("/dev/serial0", 115200, timeout=0)
 	backLeft_motor = MyMotor('M2', 0, 1) #initialize with motor port M2
 	backRight_motor = MyMotor('M1', 0, 0.62)
 
 
-#	angleIncrements = servo_steering.increments
-#	elements = (180 / angleIncrements)
-	elements =  63 # int(180 / 5) # = int(elements)
+	angleIncrements = servo_steering.get_incrementAngle()
+	elements = int(180 / angleIncrements) + 1
+#	elements =  63 # int(180 / 5) # = int(elements)
 	distanceArr = np.empty(elements)
 	angleArr = np.empty(elements)
 	full_scan = [90, -90]
-	small_scan = [45, -45]
+	small_scan = [30, -30]
 	angles = [45, -15] #limit the steering servo turn degrees
-
+	bools = [False, False, False]
 
 
 #	run_lidar(lidar)
@@ -37,10 +37,10 @@ def main():
 #	print(angleArr)
 #	print(distanceArr)
 
-		if checkFwdOpen(distanceArr, angleArr, full_scan):
+		if checkFwdOpen(distanceArr, angleArr, small_scan):
 			print("<-------------------- Front is open ----------------------->")
-#			backLeft_motor.set_power(25)
-#			backRight_motor.set_power(25)
+			backLeft_motor.set_power(25)
+			backRight_motor.set_power(25)
 
 
 
@@ -50,14 +50,18 @@ def main():
 		else:
 			print("<--------------------------Front is not open --------------------->")
 
-#			backLeft_motor.set_power(0)
-#			backRight_motor.set_power(0)
+			backLeft_motor.set_power(0)
+			backRight_motor.set_power(0)
 
 			lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
 
-			angle = change_direction(distanceArr, angleArr, backLeft_motor, backRight_motor)
+			angle , bools  = change_direction(distanceArr, angleArr, backLeft_motor, backRight_motor)
 			servo_steering.set_angle(angle)
 
+			#if ((bools[0] == False) or (bools[1] == False)) or (bools[2] == False)
+			backLeft_motor.set_power(-25)
+			backRight_motor.set_power(-25)
+			time.sleep(2)
 
 			time.sleep(0.05)
 

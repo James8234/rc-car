@@ -23,7 +23,7 @@ def read_tfluna_data(lidar):
 
 
 def lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, scan_angle):
-	angle = 5
+	angle = servo_lidar.get_incrementAngle()
 	i = 0
 
 	servo_lidar.set_angle(90)
@@ -35,25 +35,32 @@ def lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, scan_angle)
 		distanceArr[i] = distance
 
 		if servo_lidar.get_angle() == scan_angle[0]:
-			angle = -5
+			angle = -angle
 		if servo_lidar.get_angle() == scan_angle[1]:
-			angle = 5
+			angle = angle
 		time.sleep(0.05)
 
-#		print("Increment called")
 		servo_lidar.increment_angle(angle)
 		i += 1
 
-	#set back to starting angle.
-
+	print(f"Your dis arr is {distanceArr}")
+	print(f"your angle arr is {angleArr}")
 #	servo_lidar.set_angle(90)
 	time.sleep(0.25)
 
-def checkFwdOpen(distanceArr, angleArr, angles):
-#	print(f"Your angles thing contain -0 {angles[0]} -1 {angles[1]}")
-#	print(f"Your angleArr contains: {angleArr}")
+def checkFwdOpen(disArr, angleArr, angles):
+	print("Check has started -------------------")
+	print(f"The original array distance is: {disArr}")
+	print(f"the angleArr is: {angleArr}")
+	print(f"the section we want to check is : {angles}")
+
+
+	# np.nonzero returns the indice where the condition is True.
+	# Thee condition True is when the provided angles[0] is equal to an element in angleArr
 	start_index = np.nonzero(angleArr == angles[0])
 	end_index   = np.nonzero(angleArr == angles[1])
+
+
 	if start_index[0].size == 0 or end_index[0].size == 0:
 		return False
 
@@ -62,21 +69,13 @@ def checkFwdOpen(distanceArr, angleArr, angles):
 
 	if start_index > end_index:
 		start_index, end_index = end_index, start_index
-	#Check if arrays are empty
-#	if start[0].size == 0 or end[0].size == 0:
-#		return False
-#	print(f"Your start_index is {start_index}")
-#	print(f"Your end_index is {end_index}")
 
-#	print("E")
-#	print(f"{start}")
-#	start_index = start[0] #.item() #convert a single-element array into a scalar
-#	end_index = end[0] + 1 #.item() + 1
-#	print(f"The distance array contains {distanceArr}")
-	a = distanceArr[start_index:end_index + 1] #store the range of values that belong to the angle
+	a = disArr[start_index:end_index + 1] #store the range of values that belong to the angle
 
-	print(f"Your angles are {angles[0]} and {angles[1]}, The section is: {a}")
-#	print(f"The aray taken out is {a}")
+	print(f"The original array distance is: {disArr}")
+	print(f"The cut out array dis is : {a}")
+#	print(f"Your angles are: {angles[0]} and {angles[1]}, The section is: {a}")
+#	print(f"Your checkFwnOpen array is {a}")
 
 	if a.size == 0:
 		return False
@@ -87,10 +86,11 @@ def checkFwdOpen(distanceArr, angleArr, angles):
 	return True
 
 def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
-	Q1 = [90, 45]
-	Q2 = [40, -45]
+	Q1 = [90, 50]
+	Q2 = [30, -30]
 	Q3 = [-50, -90]
 
+	print(f"disArr")
 	angle = 0
 	bools = [True, True, True]
 	print("Q1 check -----------")
@@ -101,53 +101,19 @@ def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
 	bools[2] = checkFwdOpen(disArr, angArr, Q3)
 
 	if bools[1]:
-#		backLeft_motor.set_power(25)
-#		backRight_motor.set_power(25)
 		angle =  0
-#	elif  not bools[1] and not bools[2]:
-#		backLeft_motor.set_power(0)
-#		backRight_motor.set_power(0)
 	elif bools[0]:
 		angle = 45
 	elif bools[2]:
 		angle = -15
 
 
-	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
-	print(f"Your angle is: {angle}")
-#	elif bools[0]:
-#		angle = 90
-#	elif bools[3]:
-#		angle = -90
+#	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
+#	print(f"Your angle arr is: {angArr}")
 
-#	if checkFwdOpen(disArr, angArr, Q2):
-#		angle = 90
-#	else:
-#		bools[1] = False
-#	if checkFwdOpen(disArr, angArr, Q3):
-#		angle = -90
-#	else:
-#		bools[2] = False
-#	if checkFwdOpen(disArr, angArr, Q1):
-#		angle = 90
-#	else:
-#		bools[0] = False
-#	if checkFwdOpen(disArr, angArr, Q4):
-#		angle = -90
-#	else:
-#		bools[3] = False
-
-#	if
-		         #backLeft_motor.set_power(25)
- 				#backRight_motor.set_power(25)
-
-
-#	else:
-		#backup function
-#		angle = 0
 	print([int(b) for b in bools])
 
-	return angle
+	return angle, bools 
 
 def run_lidar(lidar):
 	backLeft_motor = MyMotor('M2', 25, 1) #initialize with motor port M2

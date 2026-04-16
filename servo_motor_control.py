@@ -2,7 +2,7 @@ from fusion_hat.servo import Servo
 #from handle_input import  clamp_servo_angle
 
 class MyServo:
-	def __init__(self, pin:float, angle:float, rightkey, leftkey, rightAngleLimit, leftAngleLimit):
+	def __init__(self, pin:float, angle:float, rightkey, leftkey, rightAngleLimit, leftAngleLimit, incrementAmount):
 		self.pin = pin
 		self.angle = angle
 		self.servo = Servo(pin)
@@ -10,7 +10,7 @@ class MyServo:
 			"Right": rightkey,
 			"Left": leftkey
 		}
-#		self.increments = increments
+		self.incrementAmount = incrementAmount
 		self.range = [rightAngleLimit, leftAngleLimit]
 
 
@@ -27,7 +27,7 @@ class MyServo:
 		return self.angle
 
 	def get_incrementAngle(self):
-		return self.increments
+		return self.incrementAmount
 
 	def set_angle(self, angle):
 		angle = self.clamp_servo_angle(angle)
