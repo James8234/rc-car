@@ -35,11 +35,20 @@ def main():
 #	lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
 
 	while True:
+<<<<<<< HEAD
 		servo_lidar.set_angle(0)
 		distance, strength = read_tfluna_data(lidar)
 		backLeft_motor.set_power(25)
 		backRight_motor.set_power(25)
 		time.sleep(1.25)
+=======
+		servo_lidar.set_angle(50)
+		distance, strength = read_tfluna_data(lidar)
+		if distance is None: distance = 999
+		backLeft_motor.set_power(25)
+		backRight_motor.set_power(25)
+		time.sleep(0.2)
+>>>>>>> 2208de2 (navigation update)
 
 		if distance < 30:
 			backLeft_motor.set_power(0)
@@ -62,6 +71,20 @@ def main():
 			servo_steering.set_angle(angle)
 			time.sleep(0.25)
 
+<<<<<<< HEAD
+=======
+			if servo_steering.get_angle() != -20:
+				backLeft_motor.set_power(25)
+				backRight_motor.set_power(25)
+				time.sleep(1.50)
+				servo_steering.set_angle(-20)
+#				backLeft_motor.set_power(25)
+#				backRight_motor.set_power(25)
+#				time.sleep(3.50)
+
+
+
+>>>>>>> 2208de2 (navigation update)
 #	print(angleArr)
 #	print(distanceArr)
 
