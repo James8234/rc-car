@@ -96,29 +96,14 @@ def change_direction(disArr, angArr, servo_steering):
 	Q3Arr = extractArray(disArr, angArr, Q3)
 	bools[2] = checkFwdOpen(Q3Arr)
 
-<<<<<<< HEAD
-
-#	Q1ArrMean = Q1Arr.mean()
-#	Q2ArrMean = Q2Arr.mean()
-#	Q3ArrMean = Q3Arr.mean()
-
-#	Q1ArrMin = Q1Arr.min()
-#	Q2ArrMin = Q2Arr.min()
-#	Q3ArrMin = Q3Arr.min()
-
-
-#	if (Q1ArrMean > Q2ArrMean) and (Q1ArrMin) >> Q2ArrMin):
-#	angle = -30
-
 
 	if bools[0]:
 		angle = servo_steering.range[0]
 	elif bools[1]:
 		angle = -20
-		
 	elif bools[2]:
 		angle = servo_steering.range[1]
-=======
+
 	if not (disArr.size == 0 or angArr.size == 0):
 		Q1ArrMean = Q1Arr.mean()
 		Q2ArrMean = Q2Arr.mean()
@@ -135,24 +120,21 @@ def change_direction(disArr, angArr, servo_steering):
 		else:
 			angle = -20
 	else:
-#	Q1ArrMin = Q1Arr.min()
-#	Q2ArrMin = Q2Arr.min()
-#	Q3ArrMin = Q3Arr.min()
+
 		if bools[0]:
 			angle = servo_steering.range[0]
 		elif bools[1]:
 			angle = -20
 		elif bools[2]:
 			angle = servo_steering.range[1]
->>>>>>> 2208de2 (navigation update)
 
 
-	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
+#	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
 #	print(f"Your angle arr is: {angArr}")
 
 	print([int(b) for b in bools])
 
-	return angle, bools 
+	return angle, bools
 
 def run_lidar(lidar):
 	backLeft_motor = MyMotor('M2', 25, 1) #initialize with motor port M2
