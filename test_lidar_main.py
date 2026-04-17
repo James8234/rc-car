@@ -6,7 +6,7 @@ import numpy as np
 
 
 def main():
-	servo_steering = MyServo(0, 0, "d", "a", 0, -60, 30)
+	servo_steering = MyServo(0, 0, "d", "a", 0, -60, 20)
 	servo_lidar = MyServo(1, 90, "h", "f", 90, -90, 20)
 	lidar = serial.Serial("/dev/serial0", 115200, timeout=0)
 	backLeft_motor = MyMotor('M2', 0, 1) #initialize with motor port M2
@@ -37,28 +37,28 @@ def main():
 	while True:
 		servo_lidar.set_angle(0)
 		distance, strength = read_tfluna_data(lidar)
-#		backLeft_motor.set_power(25)
-#		backRight_motor.set_power(25)
+		backLeft_motor.set_power(25)
+		backRight_motor.set_power(25)
 		time.sleep(1.25)
 
 		if distance < 30:
-#			backLeft_motor.set_power(0)
-#			backRight_motor.set_power(0)
+			backLeft_motor.set_power(0)
+			backRight_motor.set_power(0)
 
 			lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
-			angle, bools = change_direction(distanceArr, angleArr, backLeft_motor, backRight_motor)
+			angle, bools = change_direction(distanceArr, angleArr, servo_steering)
 
 			if not bools[1]:
-#				backLeft_motor.set_power(-25)
-#				backRight_motor.set_power(-25)
+				backLeft_motor.set_power(-25)
+				backRight_motor.set_power(-25)
 				time.sleep(1)
-#				backLeft_motor.set_power(0)
-#				backRight_motor.set_power(0)
+				backLeft_motor.set_power(0)
+				backRight_motor.set_power(0)
 
 				lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, full_scan)
-				angle, bools = change_direction(distanceArr, angleArr, backLeft_motor, backRight_motor)
+				angle, bools = change_direction(distanceArr, angleArr, servo_steering)
 
-
+			print(f"your servo wheel angle is {angle}")
 			servo_steering.set_angle(angle)
 			time.sleep(0.25)
 

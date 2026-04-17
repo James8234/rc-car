@@ -31,6 +31,7 @@ def lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, scan_angle)
 
 	distance, strength = read_tfluna_data(lidar) #gets old data
 
+	print(f"your elements are {elements}")
 	while i < elements:
 
 		distance, strength = read_tfluna_data(lidar)
@@ -73,7 +74,7 @@ def extractArray(disArr, angleArr, angles):
 
 	return a
 
-def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
+def change_direction(disArr, angArr, servo_steering):
 	Q1 = [90, 50]
 	Q2 = [30, -30]
 	Q3 = [-50, -90]
@@ -96,13 +97,26 @@ def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
 	bools[2] = checkFwdOpen(Q3Arr)
 
 
+#	Q1ArrMean = Q1Arr.mean()
+#	Q2ArrMean = Q2Arr.mean()
+#	Q3ArrMean = Q3Arr.mean()
 
-	if bools[1]:
-		angle = -30
-	elif bools[0]:
-		angle = 0
+#	Q1ArrMin = Q1Arr.min()
+#	Q2ArrMin = Q2Arr.min()
+#	Q3ArrMin = Q3Arr.min()
+
+
+#	if (Q1ArrMean > Q2ArrMean) and (Q1ArrMin) >> Q2ArrMin):
+#	angle = -30
+
+
+	if bools[0]:
+		angle = servo_steering.range[0]
+	elif bools[1]:
+		angle = -20
+		
 	elif bools[2]:
-		angle = -60
+		angle = servo_steering.range[1]
 
 
 	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
