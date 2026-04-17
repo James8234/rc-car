@@ -23,46 +23,45 @@ def read_tfluna_data(lidar):
 
 
 def lidar_sweep(lidar, servo_lidar, distanceArr, angleArr, elements, scan_angle):
-	angle = servo_lidar.get_incrementAngle()
+	angle = -servo_lidar.get_incrementAngle()
 	i = 0
 
 	servo_lidar.set_angle(90)
-	time.sleep(0.25)
+	time.sleep(0.5)
+
+	distance, strength = read_tfluna_data(lidar) #gets old data
 
 	while i < elements:
+
 		distance, strength = read_tfluna_data(lidar)
 		angleArr[i] = servo_lidar.get_angle()
 		distanceArr[i] = distance
+		print(f"Your index is {i}, and distance is: {distance}")
+		print(f"Your angle is {servo_lidar.get_angle()}")
 
-		if servo_lidar.get_angle() == scan_angle[0]:
-			angle = -angle
-		if servo_lidar.get_angle() == scan_angle[1]:
-			angle = angle
-		time.sleep(0.05)
+		time.sleep(0.25) #delay between each angle increment
 
 		servo_lidar.increment_angle(angle)
 		i += 1
 
-	print(f"Your dis arr is {distanceArr}")
-	print(f"your angle arr is {angleArr}")
-#	servo_lidar.set_angle(90)
-	time.sleep(0.25)
+def checkFwdOpen(Arr):
 
-def checkFwdOpen(disArr, angleArr, angles):
-	print("Check has started -------------------")
-	print(f"The original array distance is: {disArr}")
-	print(f"the angleArr is: {angleArr}")
-	print(f"the section we want to check is : {angles}")
+	a = Arr
 
+	if a.size == 0:
+		return False
 
-	# np.nonzero returns the indice where the condition is True.
-	# Thee condition True is when the provided angles[0] is equal to an element in angleArr
+	for i in a:
+		if (i < 30):
+			return False
+	return True
+
+def extractArray(disArr, angleArr, angles):
 	start_index = np.nonzero(angleArr == angles[0])
 	end_index   = np.nonzero(angleArr == angles[1])
 
-
 	if start_index[0].size == 0 or end_index[0].size == 0:
-		return False
+		return np.zeros(0)
 
 	start_index = start_index[0][0]
 	end_index = end_index[0][0]
@@ -72,18 +71,7 @@ def checkFwdOpen(disArr, angleArr, angles):
 
 	a = disArr[start_index:end_index + 1] #store the range of values that belong to the angle
 
-	print(f"The original array distance is: {disArr}")
-	print(f"The cut out array dis is : {a}")
-#	print(f"Your angles are: {angles[0]} and {angles[1]}, The section is: {a}")
-#	print(f"Your checkFwnOpen array is {a}")
-
-	if a.size == 0:
-		return False
-
-	for i in a:
-		if (i < 30):
-			return False
-	return True
+	return a
 
 def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
 	Q1 = [90, 50]
@@ -94,21 +82,30 @@ def change_direction(disArr, angArr,  backLeft_motor, backRight_motor):
 	angle = 0
 	bools = [True, True, True]
 	print("Q1 check -----------")
-	bools[0] = checkFwdOpen(disArr, angArr, Q1)
+
+	Q1Arr = extractArray(disArr, angArr, Q1)
+	bools[0] = checkFwdOpen(Q1Arr)
+
 	print("Q2 check -----------")
-	bools[1] = checkFwdOpen(disArr, angArr, Q2)
+
+	Q2Arr = extractArray(disArr, angArr, Q2)
+	bools[1] = checkFwdOpen(Q2Arr)
 	print("Q3 check -----------")
-	bools[2] = checkFwdOpen(disArr, angArr, Q3)
+
+	Q3Arr = extractArray(disArr, angArr, Q3)
+	bools[2] = checkFwdOpen(Q3Arr)
+
+
 
 	if bools[1]:
-		angle =  0
+		angle = -30
 	elif bools[0]:
-		angle = 45
+		angle = 0
 	elif bools[2]:
-		angle = -15
+		angle = -60
 
 
-#	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
+	print(f"Q1 - {bools[0]}, Q2 - {bools[1]}, Q3 - {bools[2]}")
 #	print(f"Your angle arr is: {angArr}")
 
 	print([int(b) for b in bools])

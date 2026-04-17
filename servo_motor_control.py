@@ -16,7 +16,7 @@ class MyServo:
 
 	def drive_servo(self, key):
 		servo_offset = 0 #servo needs to be centered
-		servo_angle_change = 5
+		servo_angle_change = self.get_incrementAngle()
 
 		if key == self.controls["Left"]:
 			self.increment_angle(servo_angle_change)
@@ -35,11 +35,11 @@ class MyServo:
 		self.servo.angle(self.clamp_servo_angle(angle))
 
 	def increment_angle(self, angle):
-		print(f"Your angle is {angle}")
+#		print(f"Your angle is {angle}")
 		clamped_angle = self.clamp_servo_angle(self.get_angle() + angle) #self.get_incrementAngle())
 		self.angle = clamped_angle
 		self.servo.angle(clamped_angle)
-		print(f"increment happened {clamped_angle}")
+#		print(f"increment happened {clamped_angle}")
 
 	def clamp_servo_angle(self, angle):
 		if(angle > self.range[0]):
